@@ -1,9 +1,6 @@
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 export declare class UsersService {
-    create(createUserDto: CreateUserDto): string;
-    findAll(): void;
-    findOne(id: number): string;
-    update(id: number, updateUserDto: UpdateUserDto): string;
-    remove(id: number): string;
+    private prisma;
+    constructor(prisma: PrismaService);
+    userBookings(id: number): Promise<unknown>;
 }
