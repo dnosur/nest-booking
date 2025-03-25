@@ -3,5 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export declare class SignUpService {
     private prisma;
     constructor(prisma: PrismaService);
-    signUp(createSignUpDto: CreateSignUpDto): void;
+    signUp(createSignUpDto: CreateSignUpDto): Promise<{
+        message: string;
+    }>;
 }

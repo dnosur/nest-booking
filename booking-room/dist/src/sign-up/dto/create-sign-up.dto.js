@@ -19,14 +19,14 @@ __decorate([
     __metadata("design:type", String)
 ], CreateSignUpDto.prototype, "email", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MinLength)(6),
+    (0, class_validator_1.IsString)({ message: 'Password must be a string' }),
+    (0, class_validator_1.MinLength)(6, { message: 'Password must be at least 6 characters' }),
     __metadata("design:type", String)
 ], CreateSignUpDto.prototype, "password", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MinLength)(3),
-    (0, class_validator_1.MaxLength)(20),
+    (0, class_validator_1.IsString)({ message: 'Username must be a string' }),
+    (0, class_validator_1.MinLength)(3, { message: 'Username must be at least 3 characters' }),
+    (0, class_validator_1.MaxLength)(20, { message: 'Username must not exceed 20 characters' }),
     __metadata("design:type", String)
 ], CreateSignUpDto.prototype, "username", void 0);
 //# sourceMappingURL=create-sign-up.dto.js.map

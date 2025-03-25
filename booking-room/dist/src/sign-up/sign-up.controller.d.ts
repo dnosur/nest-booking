@@ -3,5 +3,7 @@ import { CreateSignUpDto } from './dto/create-sign-up.dto';
 export declare class SignUpController {
     private readonly signUpService;
     constructor(signUpService: SignUpService);
-    create(createSignUpDto: CreateSignUpDto): void;
+    create(createSignUpDto: CreateSignUpDto): Promise<{
+        message: string;
+    }>;
 }

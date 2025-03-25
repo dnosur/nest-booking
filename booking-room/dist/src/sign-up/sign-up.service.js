@@ -14,12 +14,20 @@ const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
 const common_2 = require("@nestjs/common");
 const bcrypt_1 = require("../../utilities/bcrypt");
+const class_validator_1 = require("class-validator");
 let SignUpService = class SignUpService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    signUp(createSignUpDto) {
-        this.prisma.users.findUnique({
+    async signUp(createSignUpDto) {
+        const errors = await (0, class_validator_1.validate)(createSignUpDto);
+        if (errors.length > 0) {
+            throw new common_2.HttpException({
+                message: `Validation error`,
+                errors: errors
+            }, common_2.HttpStatus.BAD_REQUEST);
+        }
+        return this.prisma.users.findUnique({
             where: {
                 email: createSignUpDto.email,
             },
@@ -29,7 +37,7 @@ let SignUpService = class SignUpService {
                 throw new common_2.HttpException(`User with email ${createSignUpDto.email} is already exist!`, common_2.HttpStatus.BAD_REQUEST);
             }
             createSignUpDto.password = (0, bcrypt_1.hash)(createSignUpDto.password);
-            this.prisma.users.create({
+            return this.prisma.users.create({
                 data: createSignUpDto
             })
                 .then(() => {
