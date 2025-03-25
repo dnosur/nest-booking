@@ -6,13 +6,25 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 import { hash } from 'utilities/bcrypt';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class SignUpService {
   constructor(private prisma: PrismaService) { }
 
-  signUp(createSignUpDto: CreateSignUpDto) {
-    this.prisma.users.findUnique({
+  async signUp(createSignUpDto: CreateSignUpDto) {
+    const errors = await validate(createSignUpDto);
+    if (errors.length > 0) {
+      throw new HttpException(
+        {
+          message: `Validation error`,
+          errors: errors
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return this.prisma.users.findUnique({
       where: {
         email: createSignUpDto.email,
       },
@@ -27,7 +39,7 @@ export class SignUpService {
 
         createSignUpDto.password = hash(createSignUpDto.password);
 
-        this.prisma.users.create({
+        return this.prisma.users.create({
           data: createSignUpDto
         })
           .then(() => {
