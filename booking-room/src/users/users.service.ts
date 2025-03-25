@@ -1,29 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { getAllUserBookings } from 'prisma/queries/rooms';
 
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
+  constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    throw new HttpException('All users', HttpStatus.OK);
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  userBookings(id: number) {
+    console.log(`User id: ${id}`);
+    return this.prisma.$queryRaw(getAllUserBookings(id))
+      .then(result => result)
+      .catch(error => new HttpException({
+        message: `Error while getting user bookings with id ${id}`,
+        error: error
+      }, HttpStatus.BAD_REQUEST));
   }
 }

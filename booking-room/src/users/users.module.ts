@@ -1,22 +1,13 @@
 import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
+  Module
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { AuthMiddleware } from 'middlewares/authenticationTokens';
+
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, PrismaService],
 })
-export class UsersModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes({
-      path: 'users',
-      method: RequestMethod.GET,
-    });
-  }
-}
+export class UsersModule {}
